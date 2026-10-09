@@ -1,0 +1,90 @@
+@use '../core' as *;
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    // visibility в переходе: закрытое окно выпадает из таб-порядка
+    // и из дерева доступности, а не просто схлопывается в точку
+    visibility: hidden;
+    transition: transform $transition, visibility $transition;
+
+    overflow: hidden;
+    z-index: 10;
+
+    // +2px перекрывают рамку карточки, чтобы окно легло ровно по её краю
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+
+    background-color: color-black();
+    border: 1px solid color-white();
+    border-radius: $radius;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    font-weight: 400;
+    font-size: $font-size-body;
+    line-height: 24px;
+
+    @include phone {
+        top: calc(50% - 1px);
+        left: calc(50% - 1px);
+
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+    }
+
+    &--show {
+        transform: translate(-50%, -50%) scale(1);
+        visibility: visible;
+    }
+
+    &__close {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+
+        height: 35px;
+        width: 35px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid color-white();
+        box-shadow: $glow;
+        border-radius: 0 0 0 $radius;
+
+        transition: background-color $transition;
+        z-index: 2;
+
+        @include phone {
+            box-shadow: none;
+            height: 50px;
+            width: 50px;
+        }
+
+        @include hover {
+            background-color: color-white();
+            .modal__close-icon { fill: color-black(); }
+        }
+
+        &-icon {
+            height: 12px;
+            width: 12px;
+            fill: color-white();
+            transition: fill $transition;
+
+            @include phone {
+                height: 16px;
+                width: 16px;
+            }
+        }
+    }
+}

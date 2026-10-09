@@ -1,0 +1,32 @@
+# Сборка и кеши Nuxt. .output — то, что уезжает на хостинг,
+# .nuxt и .nitro пересобираются из исходников на каждом запуске
+.nuxt
+.nitro
+.output
+.data
+.cache
+dist
+
+# Зависимости. package-lock.json при этом в репозитории нужен:
+# по нему хостинг ставит ровно те же версии, что и локально
+node_modules
+
+# Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Переменные окружения: в репозиторий уходит только образец
+.env
+.env.*
+!.env.example
+
+# Служебное от системы и редакторов
+.DS_Store
+Thumbs.db
+.idea
+.fleet
+.vscode/*
+!.vscode/extensions.json

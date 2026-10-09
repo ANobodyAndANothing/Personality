@@ -1,0 +1,13 @@
+// Порядок подключения = порядок каскада. Базовые правила карточки идут
+// первыми, поэтому стили конкретных карточек перебивают их без !important.
+@use '../cards/card.scss';
+
+@use '../cards/cardStart.scss';
+@use '../cards/cardMenu.scss';
+@use '../cards/cardSkills.scss';
+@use '../cards/cardProjects.scss';
+
+@use '../modules/controller.scss';
+
+@use '../modals/modal.scss';
+@use '../modals/modalSkill.scss';

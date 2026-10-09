@@ -1,0 +1,106 @@
+@use '../core' as *;
+
+.modal-skill {
+    &__title {
+        font-size: $font-size-title;
+    }
+
+    &__content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        @include phone {
+            gap: 36px;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    &__lists {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+
+        @include phone { width: 100%; }
+
+        &-title {
+            font-size: $font-size-body;
+        }
+
+        &-list {
+            &-item {
+                position: relative;
+                margin-left: 20px;
+                list-style: none;
+
+                a {
+                    font-size: $font-size-base;
+                    text-decoration: none;
+                    // Прозрачная граница держит высоту строки при наведении
+                    border-bottom: 1px solid transparent;
+
+                    transition: border-color $transition;
+
+                    @include hover { border-bottom-color: color-white(); }
+                }
+
+                // Маркер списка: точка крупнее самого текста
+                &::before {
+                    content: '.';
+                    font-size: 26px;
+
+                    position: absolute;
+                    left: -20px;
+                    top: -6px;
+                }
+            }
+        }
+
+        &-item + &-item {
+            margin-top: 4px;
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        gap: 24px;
+
+        @include phone {
+            width: fit-content;
+            gap: 16px;
+            flex-direction: row;
+        }
+
+        &-img {
+            width: 121px;
+            height: 121px;
+        }
+
+        &-text {
+            text-align: center;
+
+            @include phone { text-align: left; }
+        }
+    }
+
+    &__example {
+        width: fit-content;
+        text-decoration: none;
+        border: 1px solid color-white();
+        border-radius: $radius;
+        padding: 8px 16px;
+
+        transition: background-color $transition, color $transition;
+
+        @include hover {
+            background-color: color-white();
+            color: color-black();
+        }
+    }
+}

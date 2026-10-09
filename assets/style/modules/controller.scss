@@ -1,0 +1,130 @@
+@use '../core' as *;
+
+.controller {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+
+    position: absolute;
+    pointer-events: none;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+    // scale вместо width/height: анимируется композитором, без пересчёта раскладки
+    transition: transform $transition;
+
+    // Контейнер только позиционирует и подрезает свечение кнопки.
+    // Модификатор направления принадлежит контейнеру, а не кнопке внутри него.
+    &__btn-container {
+        position: absolute;
+        overflow: hidden;
+
+        padding: 10px;
+        pointer-events: auto;
+
+        &--left,
+        &--right {
+            width: 46px;
+            height: 115px;
+
+            top: 50%;
+            transform: translate(0, -50%);
+
+            @include tablet {
+                width: 51px;
+                padding: 10px 4px;
+            }
+        }
+
+        &--left {
+            left: -23px;
+
+            @include tablet {
+                left: -12px;
+                .controller__btn { border-radius: 0 $radius $radius 0; }
+            }
+
+            .controller__btn-icon { rotate: -90deg; }
+        }
+
+        &--right {
+            right: -23px;
+
+            @include tablet {
+                right: -11px;
+                .controller__btn { border-radius: $radius 0 0 $radius; }
+            }
+
+            .controller__btn-icon { rotate: 90deg; }
+        }
+
+        &--top,
+        &--bottom {
+            width: 105px;
+            height: 36px;
+
+            right: 50%;
+            transform: translate(50%, 0);
+
+            @include tablet {
+                height: 44px;
+                padding: 4px 10px;
+            }
+        }
+
+        &--top {
+            top: -23px;
+            @include tablet { top: -10px; }
+        }
+
+        &--bottom {
+            bottom: -23px;
+            @include tablet { bottom: -10px; }
+
+            .controller__btn-icon { rotate: 180deg; }
+        }
+    }
+
+    &__btn {
+        height: 100%;
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: color-black();
+        border: 1px solid color-white();
+        box-shadow: $glow;
+        border-radius: $radius;
+
+        transition: background-color $transition;
+
+        @include hover {
+            background: color-white();
+            .controller__btn-icon { fill: color-black(); }
+        }
+
+        &-icon {
+            width: 15px;
+            height: 10px;
+            fill: color-white();
+            transition: fill $transition;
+        }
+    }
+
+    // Пока открыто модальное окно, стрелки уезжают под края карточки
+    &--hide {
+        transform: translate(-50%, -50%) scale(.95);
+
+        @include tablet {
+            transform: translate(-50%, -50%);
+        }
+
+        .controller__btn-container {
+            pointer-events: none;
+        }
+    }
+}

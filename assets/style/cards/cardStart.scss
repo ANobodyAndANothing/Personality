@@ -1,0 +1,285 @@
+@use '../core' as *;
+
+// Тайминги сцены целиком живут в cardStart.vue: фазы там считаются одна
+// от другой, и компонент передаёт сюда и задержку каждой буквы (--delay),
+// и длительности (--*-duration). Значения ниже — только запасные.
+$capital-duration: 420ms;
+$letter-duration: 460ms;
+$slogan-duration: 760ms;
+
+.card-start {
+    z-index: 1;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        h1 {
+            font-family: 'Open Sans', system-ui, sans-serif;
+            font-size: $font-size-hero;
+            line-height: 100%;
+            font-weight: 400;
+            text-transform: uppercase;
+
+            margin-bottom: 4px;
+
+            // Копию строки для скринридера капитель только испортит:
+            // часть читалок проговаривает КАПС по буквам
+            .visually-hidden { text-transform: none; }
+        }
+
+        h2 {
+            // Ширины хватает слогану ровно на две строки, под них и резерв высоты
+            max-width: 420px;
+            // Высота фиксирована: строка проявляется глитчем, и без резерва
+            // места кнопка ниже дёргалась бы на каждом кадре
+            height: 48px;
+
+            font-size: $font-size-lead;
+            line-height: 1;
+            font-weight: 300;
+
+            margin-bottom: 32px;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+
+            height: 42px;
+            padding: 0 24px;
+            border: 1px solid color-white();
+            border-radius: 3px;
+            background-color: color-black();
+
+            font-weight: 400;
+            font-size: $font-size-base;
+            line-height: 24px;
+            color: color-white();
+
+            // Место под кнопку зарезервировано сразу, появляется она только
+            // прозрачностью — раскладка не дёргается, layout не пересчитывается.
+            opacity: 0;
+            scale: .92;
+            pointer-events: none;
+
+            transition: background-color $transition, color $transition, border-color $transition;
+            // Задержку выставляет компонент: она равна длительности всей сцены
+            animation: showButton .6s var(--reveal-delay, 2.9s) ease forwards;
+
+            @include hover {
+                background-color: color-white();
+                border-color: color-black();
+                color: color-black();
+            }
+        }
+    }
+
+    // ── Ник ──────────────────────────────────────────────────
+    // Строка набрана целиком прописными, поэтому заглавные ника выделены
+    // не ростом, а насыщенностью и свечением: иначе «A Nobody And A Nothing»
+    // не прочитать как пять слов. Из них же заголовок и раздвигается:
+    // сначала проявляется «ANAAN» целиком, и только потом между заглавными
+    // расталкиваются остальные буквы.
+    &__letters {
+        letter-spacing: .02em;
+
+        span {
+            display: inline-block;
+            // backwards: до своей задержки буква стоит в кадре `from`,
+            // иначе все восемнадцать мигнули бы в первом кадре
+            animation: letterExpand var(--letter-duration, $letter-duration) var(--delay, 0ms) linear backwards;
+        }
+
+        .is-capital {
+            font-weight: 700;
+            // Обводка .text-shadow плюс свечение: заглавная читается
+            // и на чёрном фоне карточки, и поверх светлой травы
+            text-shadow:
+                -1px 0 color-black(),
+                 0 1px color-black(),
+                 1px 0 color-black(),
+                 0 -1px color-black(),
+                 $glow;
+
+            animation-name: capitalIn;
+            animation-duration: var(--capital-duration, $capital-duration);
+        }
+    }
+
+    // ── Слоган ───────────────────────────────────────────────
+    // Строка собирается из помех: две копии под aria-hidden рвут её
+    // на полосы и съезжают по горизонтали, настоящая строка проступает
+    // под ними. Копии держим в разметке, а не в ::before — псевдоэлемент
+    // с content читалки проговаривают, и слоган звучал бы трижды.
+    &__slogan {
+        position: relative;
+    }
+
+    &__slogan-text {
+        animation: sloganIn var(--slogan-duration, $slogan-duration) var(--delay, 0ms) ease backwards;
+    }
+
+    &__slogan-ghost {
+        position: absolute;
+        inset: 0;
+        // Исходное состояние — пусто: анимация без forwards возвращает копию
+        // сюда же, и после сцены от неё не остаётся следа
+        opacity: 0;
+
+        animation: sloganGlitch var(--slogan-duration, $slogan-duration) var(--delay, 0ms) linear;
+
+        // Вторая копия рвёт строку по другим полосам и съезжает в другую сторону
+        &.is-b {
+            animation-name: sloganGlitchReverse;
+            animation-delay: calc(var(--delay, 0ms) + 70ms);
+        }
+    }
+
+    // Анимация здесь несущая, а не украшение: тем, кому движение
+    // противопоказано, отдаём сразу собранную сцену. Глобальное правило
+    // в main.scss обнуляет только длительность, но не задержку —
+    // без этого блока буквы ждали бы своей очереди в пустом кадре.
+    @include reduced-motion {
+        &__letters span,
+        &__slogan-text {
+            animation: none;
+        }
+
+        &__slogan-ghost { display: none; }
+    }
+
+    &__background {
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        // На узких экранах сцена не запускается — прячем пустой холст
+        @include phone { display: none; }
+
+        // Трава для узких экранов — фоном, а не <img>: тег в разметке скачали бы
+        // все, включая широкие экраны, где он скрыт. Фон в media-запросе
+        // браузер не запрашивает, пока запрос не совпал.
+        &--mobile {
+            display: none;
+
+            @include phone {
+                display: block;
+                position: absolute;
+                z-index: 1;
+                bottom: 0;
+                left: 50%;
+
+                height: 50%;
+                width: 170%;
+
+                background: url('@/assets/img/grass.png') center bottom / contain no-repeat;
+                filter: drop-shadow(0 5px 5px color-white());
+                translate: -50% 0;
+                animation: moveGrass 10s infinite;
+            }
+        }
+    }
+}
+
+// Заглавная проявляется на месте: она — опора, от которой расходится строка
+@keyframes capitalIn {
+    from {
+        opacity: 0;
+        translate: 0 .14em;
+        scale: .7;
+        filter: blur(8px);
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+        filter: blur(0);
+    }
+}
+
+// Остальные буквы раскрываются из нулевой ширины и расталкивают соседей.
+//
+// Едет именно font-size, хотя на глаз буква проявляется в полный рост.
+// Это обманка. Напрашивался max-width, но его нельзя довести до auto,
+// а любое фиксированное значение буква перерастает: «i» шириной .29em
+// упирается в потолок на трети анимации, «O» шириной .78em — на двух третях,
+// и каждая перестаёт расталкивать соседей в свой момент. Отсюда и рывок.
+// font-size тянет бокс пропорционально и потолка не имеет: место едет
+// равномерно до последнего кадра.
+//
+// Платим тем, что буква растёт вместе с боксом. Прячем это прозрачностью:
+// первые 40% её просто не видно, место к тому моменту уже разъехалось,
+// а дальше она проступает сквозь размытие и дорастает до полного кегля
+// ровно к концу. Глаз читает это как «буква проявилась», а не «буква росла».
+@keyframes letterExpand {
+    0% {
+        font-size: 0;
+        opacity: 0;
+        filter: blur(7px);
+    }
+    40% {
+        font-size: .4em;
+        opacity: 0;
+        filter: blur(5px);
+    }
+    100% {
+        font-size: 1em;
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+// Слоган не выезжает, а ловится: яркость скачет, пока строка не берётся
+@keyframes sloganIn {
+    0%   { opacity: 0 }
+    28%  { opacity: .2 }
+    36%  { opacity: .9 }
+    43%  { opacity: .35 }
+    54%  { opacity: 1 }
+    61%  { opacity: .55 }
+    72%  { opacity: 1 }
+    78%  { opacity: .8 }
+    100% { opacity: 1 }
+}
+
+@keyframes sloganGlitch {
+    0%   { opacity: 0;   clip-path: inset(0 0 100% 0);  translate: 0 }
+    8%   { opacity: .85; clip-path: inset(8% 0 74% 0);  translate: -7px 0 }
+    20%  { opacity: .55; clip-path: inset(58% 0 24% 0); translate: 6px 0 }
+    33%  { opacity: .8;  clip-path: inset(30% 0 50% 0); translate: -5px 0 }
+    46%  { opacity: .5;  clip-path: inset(72% 0 6% 0);  translate: 8px 0 }
+    60%  { opacity: .7;  clip-path: inset(4% 0 82% 0);  translate: -4px 0 }
+    74%  { opacity: .35; clip-path: inset(44% 0 38% 0); translate: 3px 0 }
+    86%  { opacity: .2;  clip-path: inset(66% 0 16% 0); translate: -2px 0 }
+    100% { opacity: 0;   clip-path: inset(0 0 100% 0);  translate: 0 }
+}
+
+@keyframes sloganGlitchReverse {
+    0%   { opacity: 0;   clip-path: inset(0 0 100% 0);  translate: 0 }
+    8%   { opacity: .6;  clip-path: inset(62% 0 20% 0); translate: 6px 0 }
+    20%  { opacity: .8;  clip-path: inset(12% 0 68% 0); translate: -8px 0 }
+    33%  { opacity: .45; clip-path: inset(76% 0 4% 0);  translate: 5px 0 }
+    46%  { opacity: .75; clip-path: inset(36% 0 44% 0); translate: -6px 0 }
+    60%  { opacity: .4;  clip-path: inset(2% 0 86% 0);  translate: 4px 0 }
+    74%  { opacity: .6;  clip-path: inset(50% 0 32% 0); translate: -3px 0 }
+    86%  { opacity: .25; clip-path: inset(20% 0 62% 0); translate: 2px 0 }
+    100% { opacity: 0;   clip-path: inset(0 0 100% 0);  translate: 0 }
+}
+
+@keyframes showButton {
+    to {
+        opacity: 1;
+        scale: 1;
+        pointer-events: auto;
+    }
+}
+
+@keyframes moveGrass {
+    0%   { transform: skewX(7deg)  translate(-7px); }
+    50%  { transform: skewX(-7deg) translate(7px); }
+    100% { transform: skewX(7deg)  translate(-7px); }
+}

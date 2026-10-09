@@ -1,0 +1,99 @@
+@use '../core' as *;
+
+.card-skills {
+    z-index: 3;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    @include phone {
+        left: 0;
+        transform: translate(0, 0);
+    }
+
+    // Цитата лежит поверх холста. Клики она не перехватывает: под ней
+    // находятся блоки навыков, и касание должно доходить до сцены.
+    &__content {
+        width: 100%;
+        z-index: 2;
+        pointer-events: none;
+
+        &-quote {
+            position: absolute;
+            top: 36px;
+            left: 36px;
+
+            width: 400px;
+            font-weight: 400;
+            font-size: $font-size-body;
+            line-height: 24px;
+            transition: opacity $transition;
+
+            @include phone {
+                width: 100%;
+                max-width: 100%;
+                top: 0;
+                left: 0;
+
+                padding: 24px;
+            }
+
+            // Цитата относится к заставке: уплывая на слайд с навыками, она гаснет
+            &--hidden {
+                opacity: 0;
+            }
+
+            &-author {
+                margin-top: 16px;
+                font-style: oblique;
+                display: block;
+            }
+        }
+    }
+
+    &__background {
+        z-index: 1;
+
+        &-sea {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            // Свайпы по сцене переключают слайды, поэтому браузеру
+            // отдавать их нельзя: иначе он прокрутит страницу
+            touch-action: none;
+        }
+    }
+
+    // Дублёр содержимого холста для клавиатуры и скринридеров.
+    // Спрятан визуально, но всплывает панелью, как только в него попал фокус, —
+    // иначе фокус уезжал бы в невидимую область.
+    &__fallback {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 11;
+        clip-path: inset(50%);
+
+        &:focus-within {
+            clip-path: none;
+
+            background-color: color-black();
+            border: 1px solid color-white();
+            border-radius: 0 $radius $radius 0;
+            padding: 12px 16px;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            list-style: none;
+        }
+
+        button {
+            font-size: $font-size-base;
+            text-decoration: underline;
+        }
+    }
+}

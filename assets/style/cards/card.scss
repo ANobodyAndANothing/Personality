@@ -1,0 +1,95 @@
+@use '../core' as *;
+
+// Дистанция, на которую карточка уезжает за пределы экрана.
+// Намеренный «перелёт»: карточка исчезает раньше, чем закончится transition,
+// поэтому переход читается как рывок, а не как медленный проезд.
+// Одно значение для обеих осей — так задумана анимация.
+$card-offscreen: calc(100vw + 55%);
+
+#DonTraffic {
+    // 100dvh учитывает адресную строку мобильных браузеров
+    // и переживает поворот экрана
+    height: 100dvh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+    position: relative;
+}
+
+.card {
+    position: absolute;
+    margin: 0 auto;
+    max-width: $card-max-width;
+    width: 100%;
+    height: $card-height;
+
+    background: color-black();
+    border: 1px solid color-white();
+    border-radius: $radius;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // Только transform: сокращение до `1s ease` тянуло бы за собой тень и фон
+    transition: transform $card-transition ease;
+
+    &__content {
+        z-index: 2;
+    }
+
+    &__background {
+        z-index: 1;
+
+        position: absolute;
+        overflow: hidden;
+
+        width: 100%;
+        height: 100%;
+
+        border-radius: $radius;
+    }
+
+    &-shadow {
+        box-shadow: $glow;
+    }
+
+    // Положение карточки — производная от того, какая карточка сейчас активна
+    &[data-position='bottom'] { transform: translate(0, $card-offscreen); }
+    &[data-position='top']    { transform: translate(0, calc(#{$card-offscreen} * -1)); }
+    &[data-position='right']  { transform: translate($card-offscreen); }
+    &[data-position='left']   { transform: translate(calc(#{$card-offscreen} * -1)); }
+
+    @include tablet {
+        max-width: 100%;
+        height: 100%;
+
+        // outline вместо border, чтобы рамка не съедала внутреннюю ширину
+        border: 0;
+        outline: 1px solid color-white();
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+
+// Обводка текста, чтобы светлые буквы читались поверх светлого декора
+.text-shadow {
+    text-shadow:
+        -1px 0 color-black(),
+         0 1px color-black(),
+         1px 0 color-black(),
+         0 -1px color-black();
+
+    &-reverse{
+        color: color-black();
+        text-shadow:
+            -1px 0 color-white(),
+             0 1px color-white(),
+             1px 0 color-white(),
+             0 -1px color-white();
+    }
+}

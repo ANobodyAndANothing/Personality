@@ -1,0 +1,31 @@
+// ─────────────────────────────────────────────────────────────
+// Токены дизайна
+// ─────────────────────────────────────────────────────────────
+
+// Цвета
+@function color-white($alpha: 1) { @return rgba(235, 235, 235, $alpha) }
+@function color-black($alpha: 1) { @return rgba(15, 15, 15, $alpha) }
+
+// Раскладка
+$max-width: 1440px;
+$card-max-width: 700px;
+$card-height: 450px;
+
+// Скругления, тени, тайминги
+$radius: 6px;
+$glow: 0 0 6px color-white();
+$transition: .4s ease;
+
+// Длительность проезда карточек. Значение задаёт константа CARD_TRANSITION_MS
+// в composables/useCards.js и передаёт сюда CSS-переменной.
+$card-transition: var(--card-transition, 1000ms);
+
+// Типографика: fluid-шкала вместо пар «px на десктопе / vw на телефоне»
+$font-size-hero:   clamp(1.25rem, 6.75vw, 3rem);    // 20 → 48px
+$font-size-big:    clamp(1.75rem, 6vw,  2.99rem);   // 28 → 48px
+$font-size-medium: clamp(1.38rem, 4.5vw, 2.07rem);  // 22 → 33px
+$font-size-title:  clamp(1.25rem, 4vw,  1.95rem);   // 20 → 31px
+$font-size-small:  clamp(1rem,    3.5vw, 1.44rem);  // 16 → 23px
+$font-size-lead:   clamp(1.13rem, 5vw,  1.5rem);    // 18 → 24px
+$font-size-body:   1.25rem;                         // 20px
+$font-size-base:   clamp(.94rem, 4vw, 1rem);        // 15 → 16px
