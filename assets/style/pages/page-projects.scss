@@ -1,0 +1,153 @@
+@use '../core' as *;
+
+// ─────────────────────────────────────────────────────────────
+// Страница проектов. Карточка на весь лист, без канваса: здесь
+// читают, а не разглядывают.
+// ─────────────────────────────────────────────────────────────
+.work {
+    &__head {
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid color-white();
+    }
+
+    &__title {
+        font-size: $font-size-big;
+        font-weight: 300;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+    }
+
+    &__tagline {
+        margin-top: 6px;
+        font-size: $font-size-small;
+        color: color-white(.6);
+    }
+
+    // Текст слева, сухие списки справа: читать подряд и искать глазами —
+    // разные занятия, и мешать их в одну колонку незачем
+    &__body {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+
+        @include laptop {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__paragraph {
+        font-size: $font-size-base;
+        line-height: 1.7;
+
+        + .work__paragraph {
+            margin-top: 12px;
+        }
+    }
+
+    &__aside {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__subtitle {
+        margin-bottom: 10px;
+        font-size: $font-size-base;
+        font-weight: 400;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: color-white(.6);
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__item {
+        position: relative;
+        padding-left: 16px;
+
+        font-size: $font-size-base;
+        line-height: 1.6;
+        color: color-white(.85);
+
+        // Маркер рисуем сами: списочная точка браузера не попадает
+        // в сетку остального оформления
+        &::before {
+            content: '';
+            position: absolute;
+            top: .7em;
+            left: 0;
+
+            width: 6px;
+            height: 1px;
+            background-color: color-white(.6);
+        }
+    }
+
+    // Ограничения — не мелкий шрифт в подвале: их читают до скачивания
+    &__list--limits .work__item {
+        color: color-white(.7);
+    }
+
+    &__downloads {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid color-white();
+    }
+
+    &__files {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+    }
+
+    &__hint {
+        margin-top: 12px;
+        font-size: $font-size-base;
+        color: color-white(.55);
+    }
+}
+
+// Кнопка-файл: та же инверсия при наведении, что у всего сайта
+.file {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 14px 16px;
+
+    border: 1px solid color-white();
+    border-radius: $radius;
+
+    color: color-white();
+    text-decoration: none;
+
+    transition: background-color $transition, color $transition, box-shadow $transition;
+
+    @include hover {
+        background-color: color-white();
+        color: color-black();
+        box-shadow: $glow;
+
+        .file__note,
+        .file__size {
+            color: color-black();
+            opacity: .65;
+        }
+    }
+
+    &__label {
+        font-size: $font-size-small;
+    }
+
+    &__note,
+    &__size {
+        font-size: $font-size-base;
+        color: color-white(.55);
+        transition: color $transition, opacity $transition;
+    }
+}

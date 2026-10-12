@@ -168,6 +168,19 @@ const projectsData = [
         },
 
         tags: 'JavaScript, Nuxt3, SCSS, Canvas'
+    },
+
+    {
+        kind: KIND_PROJECT,
+        title: 'Голосовой чат',
+
+        project: {
+            name: 'vox',
+            link: '/projects',
+            description: 'Голосовая связь для своей компании на домашнем сервере: шумоподавление нейросетью, комнаты, показ экрана'
+        },
+
+        tags: 'JavaScript, Nuxt3, Electron, LiveKit, WebRTC, WebAssembly'
     }
 ]
 
@@ -1217,7 +1230,8 @@ const handleClick = () => {
     for (const item of hitLinks) {
         if (!isInside(pointerX, pointerY, item)) continue
 
-        window.open(item.link, '_blank', 'noopener')
+        if (item.link.startsWith('/')) navigateTo(item.link)
+        else window.open(item.link, '_blank', 'noopener')
 
         return
     }

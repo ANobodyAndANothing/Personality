@@ -16,12 +16,19 @@ const MARKET_META = {
     keywords: 'декор, подарки, интересные подарки, подарки близким, красивый декор для дома, индивидуальное оформление, кастомное оформление, свой дизайн, свой принт, своя идея, магазин с декором, доставка, оформление своего',
 }
 
+const PROJECTS_META = {
+    title: 'Проекты',
+    description: 'Личные проекты: что сделано, на чём работает и где скачать',
+    keywords: 'проекты, голосовой чат, vox,самохостинг, open source, Nuxt, Electron, LiveKit, шумоподавление',
+}
+
 export const PAGE_META = {
     index: {
         title: 'Middle frontend разработчик ANobodyAndANothing',
         description: 'Визитная карточка middle frontend разработчика ANobodyAndANothing',
         keywords: 'визитка, визитная карточка, сайт визитка, frontend, middle, разработчик, ANobodyAndANothing, заказать сайт, вёрстка',
     },
+    projects: PROJECTS_META,
     market: MARKET_META,
     marketPreview: MARKET_META,
 }
