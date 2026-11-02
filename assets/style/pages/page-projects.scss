@@ -24,6 +24,23 @@
         color: color-white(.6);
     }
 
+    // Ссылка в свой раздел: нужна там, где проекту мало карточки
+    &__link {
+        display: inline-block;
+        margin-top: 10px;
+
+        font-size: $font-size-small;
+        color: color-white(.75);
+        border-bottom: 1px solid color-white(.35);
+
+        transition: color $transition, border-color $transition;
+
+        @include hover {
+            color: color-white();
+            border-color: color-white();
+        }
+    }
+
     // Текст слева, сухие списки справа: читать подряд и искать глазами —
     // разные занятия, и мешать их в одну колонку незачем
     &__body {

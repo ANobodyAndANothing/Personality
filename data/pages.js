@@ -22,6 +22,12 @@ const PROJECTS_META = {
     keywords: 'проекты, голосовой чат, vox,самохостинг, open source, Nuxt, Electron, LiveKit, шумоподавление',
 }
 
+const VOX_META = {
+    title: 'vox — голосовой чат со своим сервером',
+    description: 'Голосовая связь для своей компании: свой сервер, нейросетевое шумоподавление, приложения для Windows, Linux и Android и версия для браузера',
+    keywords: 'голосовой чат, vox, свой сервер, самохостинг, шумоподавление, DeepFilterNet, LiveKit, замена дискорда, голосовая связь, приложение для андроида',
+}
+
 export const PAGE_META = {
     index: {
         title: 'Middle frontend разработчик ANobodyAndANothing',
@@ -29,6 +35,7 @@ export const PAGE_META = {
         keywords: 'визитка, визитная карточка, сайт визитка, frontend, middle, разработчик, ANobodyAndANothing, заказать сайт, вёрстка',
     },
     projects: PROJECTS_META,
+    vox: VOX_META,
     market: MARKET_META,
     marketPreview: MARKET_META,
 }

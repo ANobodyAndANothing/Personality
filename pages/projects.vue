@@ -8,6 +8,9 @@
             <header class="work__head">
                 <h2 class="work__title">{{ work.title }}</h2>
                 <p class="work__tagline">{{ work.tagline }}</p>
+                <NuxtLink v-if="work.page" class="work__link" :to="work.page">
+                    Подробнее о проекте
+                </NuxtLink>
             </header>
 
             <div class="work__body">
