@@ -98,7 +98,8 @@ usePageSeo(PAGE_META.vox)
 // стек, ограничения и файлы редактируются в одном месте, а не в двух.
 const vox = WORKS.find((w) => w.id === 'vox')
 
-const BROWSER = 'https://vox.217.149.29.3.sslip.io/ui/'
+// Своё имя: в сертификате оно есть наравне с адресным, а читается человеком.
+const BROWSER = 'https://vox.anobodyandanothing.com/ui/'
 
 const СРАВНЕНИЕ = [
     { что: 'Битрейт', как: '96 кбит/с и не режется под нагрузкой — у дискорда около 64 и режется' },

@@ -72,7 +72,7 @@ export const WORKS = [
             {
                 label: 'Браузер',
                 note: 'открыть и говорить, ставить ничего не нужно',
-                href: 'https://vox.217.149.29.3.sslip.io/ui/',
+                href: 'https://vox.anobodyandanothing.com/ui/',
                 size: 'без установки',
                 download: false,
             },
