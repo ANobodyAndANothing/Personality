@@ -43,7 +43,9 @@
                         :key="file.href"
                         class="file"
                         :href="file.href"
-                        download
+                        :download="file.download === false ? null : ''"
+                        :target="file.download === false ? '_blank' : null"
+                        :rel="file.download === false ? 'noopener' : null"
                     >
                         <span class="file__label">{{ file.label }}</span>
                         <span class="file__note">{{ file.note }}</span>
@@ -52,8 +54,8 @@
                 </div>
 
                 <p class="work__hint">
-                    Перед первым запуском поставьте ZeroTier и попросите у меня адрес сервера
-                    и номер сети — без них подключаться некуда.
+                    Адрес сервера уже внутри — остаётся ввести ник. Аккаунт попросите у меня:
+                    регистрация закрыта, потому что адрес публичный.
                 </p>
             </section>
         </article>
